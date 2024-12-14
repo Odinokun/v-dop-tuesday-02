@@ -40,11 +40,14 @@ function App() {
   const todoFromServer: ObjectType[] = [
     {
       todolistId: v1(),
-      title: 'What to learn',
+      title: 'To learn',
       filter: 'all',
       tasks: [
         { taskId: v1(), title: 'HTML&CSS', isDone: true },
         { taskId: v1(), title: 'JS', isDone: true },
+        { taskId: v1(), title: 'React', isDone: false },
+        { taskId: v1(), title: 'Rest API', isDone: false },
+        { taskId: v1(), title: 'GraphQL', isDone: false },
       ],
       students: [
         'Rick Kane',
@@ -101,11 +104,13 @@ function App() {
     },
     {
       todolistId: v1(),
-      title: 'What to do',
-      filter: 'all',
+      title: 'To watch',
+      filter: 'active',
       tasks: [
-        { taskId: v1(), title: 'HTML&CSS2', isDone: true },
-        { taskId: v1(), title: 'JS2', isDone: true },
+        { taskId: v1(), title: 'Lord of the Rings', isDone: false },
+        { taskId: v1(), title: 'The Hobbit', isDone: true },
+        { taskId: v1(), title: 'Harry Potter', isDone: true },
+        { taskId: v1(), title: 'Matrix', isDone: false },
       ],
       students: [
         'Jago Wormald1',
@@ -209,20 +214,20 @@ function App() {
   return (
     <div className='App'>
       {todoFromServer.map(tl => {
-        // let allTodolistTasks = tasks[tl.id];
-        // let tasksForTodolist = allTodolistTasks;
+        const allTodolistTasks = tl.tasks;
+        let tasksForTodolist = allTodolistTasks;
 
         if (tl.filter === 'active') {
-          // tasksForTodolist = allTodolistTasks.filter(t => t.isDone === false);
+          tasksForTodolist = allTodolistTasks.filter(t => t.isDone === false);
         }
         if (tl.filter === 'completed') {
-          // tasksForTodolist = allTodolistTasks.filter(t => t.isDone === true);
+          tasksForTodolist = allTodolistTasks.filter(t => t.isDone === true);
         }
 
         return (
           <Todolist
             key={tl.todolistId}
-            id={tl.id}
+            id={tl.todolistId}
             title={tl.title}
             tasks={tasksForTodolist}
             removeTask={removeTask}
