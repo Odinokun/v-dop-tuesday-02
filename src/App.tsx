@@ -1,6 +1,7 @@
 import { Todolist } from './Todolist';
 import { v1 } from 'uuid';
 import './App.css';
+import { useState } from 'react';
 
 type ObjectType = {
   todolistId: string;
@@ -37,7 +38,7 @@ function App() {
   //     ]
   // });
 
-  const todoFromServer: ObjectType[] = [
+  const [todoFromServer, setTodoFromServer] = useState<ObjectType[]>([
     {
       todolistId: v1(),
       title: 'To learn',
@@ -160,7 +161,7 @@ function App() {
         'Ralphie Hebert',
       ],
     },
-  ];
+  ]);
 
   function removeTask(id: string, todolistId: string) {
     //достанем нужный массив по todolistId:
@@ -181,18 +182,20 @@ function App() {
     // setTasks({ ...tasks });
   }
 
-  function changeStatus(id: string, isDone: boolean, todolistId: string) {
-    //достанем нужный массив по todolistId:
-    // const todolistTasks = tasks[todolistId];
-    // найдём нужную таску:
-    // const task = todolistTasks.find(t => t.id === id);
-    //изменим таску, если она нашлась
-    // if (task) {
-    //   task.isDone = isDone;
-    //   // засетаем в стейт копию объекта, чтобы React отреагировал перерисовкой
-    //   setTasks({ ...tasks });
-    // }
-  }
+  const changeStatus = (id: string, isDone: boolean, todolistId: string) => {
+    setTodoFromServer(
+      todoFromServer.map(tl =>
+        tl.todolistId === todolistId
+          ? {
+              ...tl,
+              tasks: tl.tasks.map(t =>
+                t.taskId === id ? { ...t, isDone } : t
+              ),
+            }
+          : tl
+      )
+    );
+  };
 
   function changeFilter(value: FilterValuesType, todolistId: string) {
     // const todolist = todolists.find(tl => tl.id === todolistId);
@@ -214,14 +217,13 @@ function App() {
   return (
     <div className='App'>
       {todoFromServer.map(tl => {
-        const allTodolistTasks = tl.tasks;
-        let tasksForTodolist = allTodolistTasks;
+        let tasksForTodolist = tl.tasks;
 
         if (tl.filter === 'active') {
-          tasksForTodolist = allTodolistTasks.filter(t => t.isDone === false);
+          tasksForTodolist = tl.tasks.filter(t => t.isDone === false);
         }
         if (tl.filter === 'completed') {
-          tasksForTodolist = allTodolistTasks.filter(t => t.isDone === true);
+          tasksForTodolist = tl.tasks.filter(t => t.isDone === true);
         }
 
         return (

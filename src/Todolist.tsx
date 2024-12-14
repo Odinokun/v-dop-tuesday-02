@@ -39,7 +39,7 @@ export function Todolist(props: PropsType) {
 
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     setError(null);
-    if (e.charCode === 13) {
+    if (e.key === 'Enter') {
       addTask();
     }
   };
@@ -54,7 +54,6 @@ export function Todolist(props: PropsType) {
   return (
     <div>
       <h3>
-        {' '}
         {props.title}
         <button onClick={removeTodolist}>x</button>
       </h3>
@@ -62,7 +61,7 @@ export function Todolist(props: PropsType) {
         <input
           value={title}
           onChange={onChangeHandler}
-          onKeyPress={onKeyPressHandler}
+          onKeyDown={onKeyPressHandler}
           className={error ? 'error' : ''}
         />
         <button onClick={addTask}>+</button>
@@ -70,14 +69,14 @@ export function Todolist(props: PropsType) {
       </div>
       <ul>
         {props.tasks.map(t => {
-          const onClickHandler = () => props.removeTask(t.id, props.id);
+          const onClickHandler = () => props.removeTask(t.taskId, props.id);
           const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
             const newIsDoneValue = e.currentTarget.checked;
-            props.changeTaskStatus(t.id, newIsDoneValue, props.id);
+            props.changeTaskStatus(t.taskId, newIsDoneValue, props.id);
           };
 
           return (
-            <li key={t.id} className={t.isDone ? 'is-done' : ''}>
+            <li key={t.taskId} className={t.isDone ? 'is-done' : ''}>
               <input
                 type='checkbox'
                 onChange={onChangeHandler}
