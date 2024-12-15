@@ -163,14 +163,14 @@ function App() {
     },
   ]);
 
-  function removeTask(id: string, todolistId: string) {
-    //достанем нужный массив по todolistId:
-    // const todolistTasks = tasks[todolistId];
-    // перезапишем в этом объекте массив для нужного тудулиста отфилтрованным массивом:
-    // tasks[todolistId] = todolistTasks.filter(t => t.id != id);
-    // засетаем в стейт копию объекта, чтобы React отреагировал перерисовкой
-    // setTasks({ ...tasks });
-  }
+  const removeTask = (id: string, todolistId: string) =>
+    setTodoFromServer(
+      todoFromServer.map(tl =>
+        tl.todolistId === todolistId
+          ? { ...tl, tasks: tl.tasks.filter(t => t.taskId !== id) }
+          : tl
+      )
+    );
 
   const addTask = (title: string, todolistId: string) => {
     const newTask: TasksType = { taskId: v1(), title, isDone: false };
