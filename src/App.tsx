@@ -1,4 +1,4 @@
-import { Todolist } from './Todolist';
+import { TaskType, Todolist } from './Todolist';
 import { v1 } from 'uuid';
 import './App.css';
 import { useState } from 'react';
@@ -172,17 +172,18 @@ function App() {
     // setTasks({ ...tasks });
   }
 
-  function addTask(title: string, todolistId: string) {
-    const task = { id: v1(), title: title, isDone: false };
-    //достанем нужный массив по todolistId:
-    // const todolistTasks = tasks[todolistId];
-    // перезапишем в этом объекте массив для нужного тудулиста копией, добавив в начало новую таску:
-    // tasks[todolistId] = [task, ...todolistTasks];
-    // засетаем в стейт копию объекта, чтобы React отреагировал перерисовкой
-    // setTasks({ ...tasks });
-  }
+  const addTask = (title: string, todolistId: string) => {
+    const newTask: TasksType = { taskId: v1(), title, isDone: false };
+    setTodoFromServer(
+      todoFromServer.map(tl =>
+        tl.todolistId === todolistId
+          ? { ...tl, tasks: [newTask, ...tl.tasks] }
+          : tl
+      )
+    );
+  };
 
-  const changeStatus = (id: string, isDone: boolean, todolistId: string) => {
+  const changeStatus = (id: string, isDone: boolean, todolistId: string) =>
     setTodoFromServer(
       todoFromServer.map(tl =>
         tl.todolistId === todolistId
@@ -195,15 +196,13 @@ function App() {
           : tl
       )
     );
-  };
 
-  function changeFilter(value: FilterValuesType, todolistId: string) {
-    // const todolist = todolists.find(tl => tl.id === todolistId);
-    // if (todolist) {
-    //   todolist.filter = value;
-    //   setTodolists([...todolists]);
-    // }
-  }
+  const changeFilter = (value: FilterValuesType, todolistId: string) =>
+    setTodoFromServer(
+      todoFromServer.map(tl =>
+        tl.todolistId === todolistId ? { ...tl, filter: value } : tl
+      )
+    );
 
   function removeTodolist(id: string) {
     // засунем в стейт список тудулистов, id которых не равны тому, который нужно выкинуть
